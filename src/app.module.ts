@@ -18,9 +18,9 @@ import { UsersModule } from './users/users.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      database: 'sportify-clone-01',
+      database: 'spotify-clone',
       host: 'localhost',
-      port: 5432,
+      port: 5433,
       username: 'postgres',
       password: 'Qt291298',
       entities: [Song, User, Artist, Playlist],
