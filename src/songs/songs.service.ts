@@ -9,7 +9,7 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
-import { Artist } from 'src/artist/artist.entity';
+import { Artist } from 'src/artists/artist.entity';
 
 @Injectable()
 export class SongsService {
