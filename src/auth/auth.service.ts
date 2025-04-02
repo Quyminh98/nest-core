@@ -9,6 +9,7 @@ import { PayloadType } from './types/payload-type';
 import * as speakeasy from 'speakeasy';
 import { Enable2FAType } from './types/auth-types';
 import { UpdateResult } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -16,21 +17,32 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
     private artistService: ArtistsService,
+    private configService: ConfigService,
   ) {}
-  async login(loginDTO: LoginDTO): Promise<{ accessToken: string }> {
+  async login(
+    loginDTO: LoginDTO,
+  ): Promise<
+    { accessToken: string } | { validate2FA: string; message: string }
+  > {
     const user = await this.userService.findOne(loginDTO);
     const passwordMatched = await bcrypt.compare(
       loginDTO.password,
       user.password,
     ); //
     if (passwordMatched) {
-      // delete user.password;
-      // return user;
-
       const payload: PayloadType = { email: user.email, userId: user.id };
       const artist = await this.artistService.findArtist(user.id);
       if (artist) {
         payload.artistId = artist.id;
+      }
+      if (user.enable2FA && user.twoFASecret) {
+        // sends the validateToken request link
+        // else otherwise sends the json web token in the response
+        return {
+          validate2FA: 'http://localhost:3000/auth/validate-2fa',
+          message:
+            'Please send the one-time password/token from your Google Authenticator App',
+        };
       }
       return {
         accessToken: this.jwtService.sign(payload),
@@ -79,5 +91,9 @@ export class AuthService {
     } catch (err) {
       throw new UnauthorizedException('Error verifying token');
     }
+  }
+
+  async validateUserByApiKey(apiKey: string): Promise<User> {
+    return this.userService.findByApiKey(apiKey);
   }
 }

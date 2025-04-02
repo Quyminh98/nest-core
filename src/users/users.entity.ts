@@ -37,4 +37,7 @@ export class User {
   // enable or disable the two-factor authentication
   @Column({ default: false, type: 'boolean' })
   enable2FA: boolean;
+
+  @Column()
+  apiKey: string;
 }

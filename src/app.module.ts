@@ -14,25 +14,34 @@ import { PlayListModule } from './playlists/playlists.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
-
+import { dataSourceOptions } from 'db/data-source';
+import { SeedModule } from './seed/seed.module';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
+// {
+//   type: 'postgres',
+//   database: 'spotify-clone-02',
+//   host: 'localhost',
+//   port: 5432,
+//   username: 'postgres',
+//   password: 'Qt291298',
+//   entities: [Song, User, Artist, Playlist],
+//   synchronize: true,
+// }
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      database: 'spotify-clone',
-      host: 'localhost',
-      port: 5433,
-      username: 'postgres',
-      password: 'Qt291298',
-      entities: [Song, User, Artist, Playlist],
-      synchronize: true,
-    }),
-
+    TypeOrmModule.forRoot(dataSourceOptions),
     SongsModule,
     PlayListModule,
     AuthModule,
     UsersModule,
     ArtistsModule,
+    SeedModule,
+    ConfigModule.forRoot({
+      envFilePath: ['.development.env', '.production.env'],
+      isGlobal: true,
+      load: [configuration],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
