@@ -107,3 +107,31 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hcnRpb
 ### Enable 2FA Authentication
 GET http://localhost:3000/auth/enable-2fa
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwidXNlcklkIjoxLCJpYXQiOjE3NDI5MTI1MTEsImV4cCI6MTc0Mjk5ODkxMX0.bd1F0jehfbMnvbHUJCi8b784GOZBLqzDruEedmD7wdA
+
+### Validate 2FA Token
+POST http://localhost:3000/auth/validate-2fa
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwidXNlcklkIjoxLCJpYXQiOjE3NDI5MTI1MTEsImV4cCI6MTc0Mjk5ODkxMX0.bd1F0jehfbMnvbHUJCi8b784GOZBLqzDruEedmD7wdA
+Content-Type: application/json
+
+{
+    "token": "123456"
+}
+
+### API-KEY
+GET http://localhost:3000/auth/profile
+Authorization: Bearer 6de059db-3015-4e5b-985c-0f63dcc31b0b
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
