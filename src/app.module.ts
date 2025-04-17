@@ -14,10 +14,11 @@ import { PlayListModule } from './playlists/playlists.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
-import { dataSourceOptions } from 'db/data-source';
+import { dataSourceOptions, typeOrmAsyncConfig } from 'db/data-source';
 import { SeedModule } from './seed/seed.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { validate } from 'env.validation';
 // {
 //   type: 'postgres',
 //   database: 'spotify-clone-02',
@@ -30,31 +31,40 @@ import configuration from './config/configuration';
 // }
 @Module({
   imports: [
-    TypeOrmModule.forRoot(dataSourceOptions),
+    // TypeOrmModule.forRoot(dataSourceOptions),
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     SongsModule,
     PlayListModule,
     AuthModule,
     UsersModule,
     ArtistsModule,
     SeedModule,
+    // ConfigModule.forRoot({
+    //   envFilePath: ['.env.development', '.env.production'],
+    //   isGlobal: true,
+    //   load: [configuration],
+    //   validate: validate,
+    // }),
     ConfigModule.forRoot({
-      envFilePath: ['.development.env', '.production.env'],
+      envFilePath: [`${process.cwd()}/.env.${process.env.NODE_ENV}`],
       isGlobal: true,
       load: [configuration],
+      validate: validate,
     }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule {
-  constructor(private dataSource: DataSource) {
-    console.log(dataSource.driver.database);
-  }
-  configure(consumer: MiddlewareConsumer) {
-    // consumer.apply(LoggerMiddleware).forRoutes('songs'); // option no 1
-    // consumer
-    // .apply(LoggerMiddleware)
-    // .forRoutes({ path:  'songs',  method:  RequestMethod.POST }); //option no 2
-    consumer.apply(LoggerMiddleware).forRoutes(SongsController); //option no 3
-  }
-}
+// export class AppModule implements NestModule {
+//   constructor(private dataSource: DataSource) {
+//     console.log(dataSource.driver.database);
+//   }
+//   configure(consumer: MiddlewareConsumer) {
+//     // consumer.apply(LoggerMiddleware).forRoutes('songs'); // option no 1
+//     // consumer
+//     // .apply(LoggerMiddleware)
+//     // .forRoutes({ path:  'songs',  method:  RequestMethod.POST }); //option no 2
+//     consumer.apply(LoggerMiddleware).forRoutes(SongsController); //option no 3
+//   }
+// }
+export class AppModule {}
